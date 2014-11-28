@@ -16,27 +16,10 @@
         }
     })
 
-    $scope.testCreate = function () {
-        $scope.pres.slides = { 1000000: {} };
-        $scope.pres.selectedSlideId = 1000000;
-        var slide = $scope.pres.slides[$scope.pres.selectedSlideId];
-        slide.url = 'google.com';
-        slide.left = 0;
-        slide.right = 100;
-        slide.shiftX = 0;
-        slide.zoom = 0;
-        slide.top = 0;
-        slide.bottom = 100;
-        slide.shiftY = 0;
-        slide.title = 'One message';
-        console.log($scope.pres.slides);
-    }
-
     $scope.$watch(function () {
         return $scope.slide.url;
     }, function (url) {
-        console.log(url);
-        if (url && url.indexOf('http://') != 0 && url.indexOf('https://') != 0) {
+        if (url && url.indexOf('http://') != 0 && url.indexOf('https://') != 0){
             url = 'http://' + url;
         }
         try {
@@ -106,8 +89,8 @@
             var id = Number($scope.pres.selectedSlideId);
             if ((id - 1) in $scope.pres.slides) {
                 swapItems($scope.pres.slides, id - 1, id);
+                $scope.pres.selectedSlideId = id - 1;
             }
-            $scope.pres.selectedSlideId = id - 1;
         }
     };
     $scope.moveSlideDown = function () {
@@ -115,8 +98,22 @@
             var id = Number($scope.pres.selectedSlideId);
             if ((id + 1) in $scope.pres.slides) {
                 swapItems($scope.pres.slides, id + 1, id);
+                $scope.pres.selectedSlideId = id + 1;
             }
-            $scope.pres.selectedSlideId = id + 1;
+        }
+    };
+}).
+directive('ngRangeSlider', function() {
+    return {
+        restrict: "A",
+        link: function(scope, element, attrs) {
+            $(element).noUiSlider({
+                start: [0, 100], connect: true,
+                orientation: attrs.orientation,
+                range: { 'min': Number(attrs.min),
+                         'max': Number(attrs.max) }
+            });
+            $(element).css('display', 'inline-block');
         }
     };
 });

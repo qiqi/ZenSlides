@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html ng-app="zenBoard">
 <head>
     <meta charset="utf-8" />
@@ -16,92 +16,94 @@
     <script src='bower_components/jquery-mobile/jquery.mobile-1.4.5.min.js'></script>
     <script src="bower_components/nouislider/distribute/jquery.nouislider.min.js"></script>
 
-
     <!-- ZenBoard references -->
     <script src="/js/zenBoard.js"></script>
+
+    <style id="thumbnail-style"></style>
+    <style id="control-style"></style>
 </head>
 <body style="overflow: hidden;">
-    <div id="board" ng-controller="boardCtrl" style="width:100%; height:100%;" data-role='page'>
-        <div id="editBoard" style="width:100%; height:100%;">
-            <table style="height:100vh; width:100vw; overflow:hidden;">
-                <tr>
-                    <td>
-                        <!-- THUMBNAIL CONTROLLERS -->
-                        <table style="position: absolute; z-index:100"><tr>
-                        <td><a ng-click="moveSlideUp()" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-u ui-btn-icon-notext"></a></td>
-                        <td><a ng-click="moveSlideDown()" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-d ui-btn-icon-notext"></a></td>
-                        <td><a ng-click="addSlide()" class="ui-btn ui-shadow ui-corner-all ui-icon-plus ui-btn-icon-notext"></a></td>
-                        <td><a ng-click="deleteSlide()" class="ui-btn ui-shadow ui-corner-all ui-icon-delete ui-btn-icon-notext"></a></td>
-                        </tr></table>
-                        <!-- THUMBNAIL CONTROLLERS -->
-
-                        <!-- THUMBNAILS -->
-                        <div style="height:100vh; width:200px;">
-                            <div style="overflow-y: scroll; height: 100%">
-                                <div ng-repeat='(slideId, slide) in pres.slides' ng-attr-id="slide-{{slideId}}">
-                                    <div class='thumbnail-outside' ng-class='{selected: isSlideSelected(slideId)}' ng-click='selectSlide(slideId);'>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- THUMBNAILS -->
-                    </td>
-                    <td>
-                        <input type="text" placeholder="url" ng-model="slide.url" style="width:80%" />
-
-                        <!-- MAIN BOARD -->
-                        <div style="zoom: 0.8; width: 80vw; height: 50vh; position:relative; border: solid 1px;">
-                            <div class="outer" ng-style="{left: slide.left+'%', width: (slide.right-slide.left)/Math.exp(slide.zoom/100)+'%', top: slide.top+'%', height: (slide.bottom-slide.top)/Math.exp(slide.zoom/100)+'%', zoom: Math.exp(slide.zoom/100)}">
-                                <iframe id="webview" class="inner" ng-style="{left: 100/(slide.right-slide.left)*slide.shiftX+'%', width:(10000/(slide.right-slide.left))*Math.exp(slide.scale/100)+'%', top: 100/(slide.bottom-slide.top)*slide.shiftY+'%', height:(10000/(slide.bottom-slide.top))*Math.exp(slide.scale/100)+'%'}"></iframe>
-                            </div>
-                        </div>
-                        <!-- MAIN BOARD -->
-
-                        <div style="width:50vw; height:20vh;">
-                        <table style="width: 100%">
-                        <tr>
-                        <td rowspan="2" width="10%">
-                            <div data-role="controlgroup">
-                                <button class="ui-btn ui-btn-icon-notext ui-icon-plus">
-                                <button class="ui-btn ui-btn-icon-notext ui-icon-minus">
-                            </div>
-                        </td>
-                        <td height="40px" colspan="2"><div style="width:100%" id="h-slider-out"></div></td></tr>
-                        <tr><td height="40px" width="10%"></td><td><div style="width:87%" id="h-slider-in"></div> </td></tr>
-                        </table>
-                        <script>$("#h-slider-out").noUiSlider({
-                            start: [0, 100], connect: true,
-                            range: { 'min': -100, 'max': 200 }
-                        });
-                        $("#h-slider-in").noUiSlider({
-                            start: [0, 100], connect: true,
-                            range: { 'min': 0, 'max': 100 }
-                        });
-                        </script>
-                        </div>
-                    </td>
-                    <td>
-                        <table style="width: 100%; height:100%"><tr>
-                        <td width="40px" valign="middle"><div id="v-slider-out"></div></td>
-                        <td width="40px" valign="middle"><div id="v-slider-in"></div> </td>
-                        </tr></table>
-                        <script>$("#v-slider-out").height(500).noUiSlider({
-                            start: [0, 100], connect: true,
-                            range: { 'min': -100, 'max': 200 },
-                            direction: 'rtl',
-                            orientation: 'vertical',
-                        });
-                        $("#v-slider-in").height(400).noUiSlider({
-                            start: [0, 100], connect: true,
-                            range: { 'min': 0, 'max': 100 },
-                            direction: 'rtl',
-                            orientation: 'vertical',
-                        });
-                        </script>
-                    </td>
-                </tr>
-            </table>
+  <div ng-controller="boardCtrl" data-role="page" class="full-screen ui-grid-a">
+    <div class="ui-block-a" style="height: 100vh; width: 20%;">
+      <div data-role="controlgroup" data-type="horizontal" data-mini="true" class="float-above">
+        <a ng-click="moveSlideUp()" class="ui-btn ui-icon-arrow-u ui-btn-icon-notext" data-role="button">Up</a>
+        <a ng-click="moveSlideDown()" class="ui-btn ui-icon-arrow-d ui-btn-icon-notext" data-role="button">Down</a>
+        <a ng-click="addSlide()" class="ui-btn ui-icon-plus ui-btn-icon-notext" data-role="button">Add</a>
+        <a ng-click="deleteSlide()" class="ui-btn ui-icon-delete ui-btn-icon-notext" data-role="button">Del</a>
+      </div>
+      <div style="height:100vh; width:100%; overflow-y: scroll;">
+        <div style="height:40px;"></div>
+        <div class='thumbnail-outside' ng-repeat='(slideId, slide) in pres.slides' ng-attr-id="slide-{{slideId}}" ng-class='{selected: isSlideSelected(slideId)}' ng-click='selectSlide(slideId);'>
+          <div class='thumbnail-inside'></div>
         </div>
+        <script>
+          $(document).ready( function() {
+            function zoomThumbnails () {
+              var width = ($('.ui-block-a').width() - 40);
+              var zoom = width / 1600;
+              $('#thumbnail-style').html('.thumbnail-inside{zoom:' + zoom
+                + ';-ms-zoom:' + zoom + ';-moz-transform:scale(' + zoom + ');}\n'
+                + '.thumbnail-outside{width:' + width + 'px;'
+                + 'height:' + width * 2/3 + 'px;}');
+            }
+            zoomThumbnails();
+            $(window).resize(zoomThumbnails);
+          });
+        </script>
+        <!-- THUMBNAILS -->
+      </div>
     </div>
+    <div class="ui-block-b" style="height:100vh; width:80%; position:relative;">
+      <div class="float" id="main-outer">
+        <div id="main">
+          <div id="outer">
+            <iframe id="webview" id="inner"></iframe>
+          </div>
+        </div>
+      </div>
+      <div class="float" id='v-sliders'>
+        <div ng-range-slider class='v-slider' orientation="vertical" min="-100" max="200" id="v-slider-out"></div>
+        <div ng-range-slider class='v-slider' orientation="vertical" min="0" max="100" id="v-slider-in"></div>
+      </div>
+      <div class="float" id='h-sliders'>
+        <div style="display:inline-block" class="h-slider">
+          <div ng-range-slider class='h-slider' style="width:100%;" min="-100" max="200" id="h-slider-out"></div>
+          <div ng-range-slider class='h-slider' style="width:100%;" min="0" max="100" id="h-slider-in"></div>
+        </div>
+        <input id="url" class='h-slider' type="text" placeholder="url" ng-model="slide.url" style="width:80%" />
+      </div>
+      <div id='zoom' class='float' data-role="controlgroup" style="display:inline-block; margin:20px">
+        <a class="ui-btn ui-btn-icon-notext ui-icon-plus">Zoom In</a>
+        <a class="ui-btn ui-btn-icon-notext ui-icon-minus">Zoom Out</a>
+      </div>
+      <script>
+        $(document).ready( function() {
+          function zoomMain () {
+            var width = ($('.ui-block-b').width() - 150);
+            var height = ($(window).height() - 160);
+            var zoom = Math.min(width / 1600, height / 1200);
+            console.log(width, height, zoom);
+            $('#main').css('zoom', zoom);
+            $('#main').css('-ms-zoom:', zoom);
+            $('#main').css('-moz-transform', 'scale(' + zoom + ')');
+            $('#control-style').html(
+                '#main-outer{top:' + (height - 1200*zoom)/2 + 'px;'
+              + 'left:' + (width - 1600*zoom)/2 + 'px;}\n'
+              + '#v-sliders{top:0; left:' + (width + 40) + 'px;}\n'
+              + '#h-sliders{left:0; top:' + (height + 20) + 'px;}\n'
+              + '#zoom{left:' + (width + 40) + 'px;'
+              + ' top:' + (height) + 'px;}');
+            $('#v-sliders').height(height + 20);
+            $('#h-sliders').width(width + 40);
+            $('.v-slider').height(height);
+            $('.h-slider').width(width);
+            $('.url').width(width);
+          }
+          zoomMain();
+          $(window).resize(zoomMain);
+        });
+      </script>
+    </div>
+  </div>
 </body>
 </html>

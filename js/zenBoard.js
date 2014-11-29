@@ -1,13 +1,15 @@
-﻿angular.module('zenBoard', ['firebase']).controller('boardCtrl', function ($scope, $sce, $firebase) {
+﻿Firebase.INTERNAL.forceWebSockets();
+var firebaseRef = new Firebase("https://infinite-walls.firebaseio.com/pres");
+
+angular.module('zenBoard', ['firebase']).controller('boardCtrl', function ($scope, $sce, $firebase) {
     $scope.Math = window.Math;
     $scope.$sce = $sce;
 
-    var ref = new Firebase("https://infinite-walls.firebaseio.com/pres");
     $scope.pres = {};
     $scope.slide = {};
     $scope.slide.zoom = 0;
-    $firebase(ref.child('test-pres')).$asObject().$bindTo($scope, 'pres');
- 
+    $firebase(firebaseRef.child('test-pres')).$asObject().$bindTo($scope, 'pres');
+
     $scope.$watch(function () {
         return $scope.pres && $scope.pres.slides && $scope.pres.selectedSlideId
             && $scope.pres.slides[$scope.pres.selectedSlideId];

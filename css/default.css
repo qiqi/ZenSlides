@@ -1,4 +1,4 @@
-﻿body {
+﻿body, div {
     background-image: url('../images/white_brick_wall.png');
 }
 .float-above {

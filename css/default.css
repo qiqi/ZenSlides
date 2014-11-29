@@ -1,7 +1,5 @@
-﻿.full-screen {
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
+﻿body {
+    background-image: url('../images/white_brick_wall.png');
 }
 .float-above {
     position: absolute;
@@ -33,7 +31,6 @@
     -moz-transform-origin: left top;
 }
 .ui-block-a,.ui-block-b {
-    background-image: url('../images/white_brick_wall.png');
     overflow: hidden;
 }
 #main {

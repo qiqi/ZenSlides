@@ -36,7 +36,6 @@
     "angularfire": "*",
     "angular-sanitize": "*",
     "jquery": ">2.0",
-    "jquery-mobile": "*",
     "nouislider": "*"
   }
 }

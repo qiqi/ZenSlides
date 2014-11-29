@@ -86,7 +86,7 @@
       <script>
         $(document).ready( function() {
           function zoomMain () {
-            var width = ($('.ui-block-b').width() - 200);
+            var width = ($(window).width() * 0.8 - 200);
             var height = ($(window).height() - 220);
             var left = $('.ui-block-a').width() + 10;
             var zoom = Math.min(width / 1600, height / 1200);

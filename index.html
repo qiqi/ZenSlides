@@ -90,11 +90,10 @@
             var height = ($(window).height() - 220);
             var left = $('.ui-block-a').width() + 10;
             var zoom = Math.min(width / 1600, height / 1200);
-            $('#main').css('-ms-zoom', zoom);
-            $('#main').css('-moz-transform', 'scale(' + zoom + ')');
-            $('#main').css('-webkit-transform', 'scale(' + zoom + ')');
             $('#control-style').html(
-                '#main-outer{top:' + (height - 1200*zoom)/2 + 'px;'
+                '#main{-ms-zoom:' + zoom + ';' + '-moz-transform:scale(' + zoom + ');'
+              + '-webkit-transform:scale(' + zoom + ');}\n'
+              + '#main-outer{top:' + (height - 1200*zoom)/2 + 'px;'
               + 'left:' + (left + (width - 1600*zoom)/2) + 'px;}\n'
               + '#v-sliders{top:0; left:' + (left + width + 40) + 'px;}\n'
               + '#h-sliders{left:' + left + 'px; top:' + (height + 20) + 'px;}\n'

@@ -55,33 +55,35 @@
         <!-- THUMBNAILS -->
       </div>
     </div>
-    <div class="ui-block-b" ng-block-b style="height:100vh; width:80%; position:relative;">
-      <div class="float" id="main-outer">
-        <div id="main">
-          <div id="webview-box">
-            <iframe id="webview" src="about:blank"></iframe>
+    <div class="ui-block-b" style="height:100vh; width:80%;">
+      <div style="width:100%; height:100%; position:relative">
+        <div class="float" id="main-outer">
+          <div id="main">
+            <div id="webview-box">
+              <iframe id="webview" src="about:blank"></iframe>
+            </div>
+            <div class="blocker" id="blocker-north"></div>
+            <div class="blocker" id="blocker-south"></div>
+            <div class="blocker" id="blocker-west"></div>
+            <div class="blocker" id="blocker-east"></div>
+            <div id="window-outline"></div>
           </div>
-          <div class="blocker" id="blocker-north"></div>
-          <div class="blocker" id="blocker-south"></div>
-          <div class="blocker" id="blocker-west"></div>
-          <div class="blocker" id="blocker-east"></div>
-          <div id="window-outline"></div>
         </div>
-      </div>
-      <div class="float" id='v-sliders'>
-        <div ng-range-slider ng-from="slide.vSliderOutL" ng-to="slide.vSliderOutR" class='v-slider' orientation="vertical" min="-50" max="150" id="v-slider-out"></div>
-        <div ng-range-slider ng-from="slide.vSliderInL" ng-to="slide.vSliderInR" class='v-slider' orientation="vertical" min="0" max="100" id="v-slider-in"></div>
-      </div>
-      <div class="float" id='h-sliders'>
-        <div style="display:inline-block" class="h-slider">
-          <div ng-range-slider ng-from="slide.hSliderOutL" ng-to="slide.hSliderOutR"class='h-slider' style="width:100%;" min="-50" max="150" id="h-slider-out"></div>
-          <div ng-range-slider ng-from="slide.hSliderInL" ng-to="slide.hSliderInR" class='h-slider' style="width:100%;" min="0" max="100" id="h-slider-in"></div>
+        <div class="float" id='v-sliders'>
+          <div ng-range-slider ng-from="slide.vSliderOutL" ng-to="slide.vSliderOutR" class='v-slider' orientation="vertical" min="-50" max="150" id="v-slider-out"></div>
+          <div ng-range-slider ng-from="slide.vSliderInL" ng-to="slide.vSliderInR" class='v-slider' orientation="vertical" min="0" max="100" id="v-slider-in"></div>
         </div>
-        <input id="url" class='h-slider' type="text" placeholder="url" ng-model="slide.url" style="width:80%" />
-      </div>
-      <div id='zoom' class='float' data-role="controlgroup" style="display:inline-block; margin:20px">
-        <a ng-click="zoomIn();" class="ui-btn ui-btn-icon-notext ui-icon-plus">Zoom In</a>
-        <a ng-click="zoomOut();" class="ui-btn ui-btn-icon-notext ui-icon-minus">Zoom Out</a>
+        <div class="float" id='h-sliders'>
+          <div style="display:inline-block" class="h-slider">
+            <div ng-range-slider ng-from="slide.hSliderOutL" ng-to="slide.hSliderOutR"class='h-slider' style="width:100%;" min="-50" max="150" id="h-slider-out"></div>
+            <div ng-range-slider ng-from="slide.hSliderInL" ng-to="slide.hSliderInR" class='h-slider' style="width:100%;" min="0" max="100" id="h-slider-in"></div>
+          </div>
+          <input id="url" class='h-slider' type="text" placeholder="url" ng-model="slide.url" style="width:80%" />
+        </div>
+        <div id='zoom' class='float' data-role="controlgroup" style="display:inline-block; margin:20px">
+          <a ng-click="zoomIn();" class="ui-btn ui-btn-icon-notext ui-icon-plus">Zoom In</a>
+          <a ng-click="zoomOut();" class="ui-btn ui-btn-icon-notext ui-icon-minus">Zoom Out</a>
+        </div>
       </div>
       <script>
         $(document).ready( function() {

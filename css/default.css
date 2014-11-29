@@ -33,7 +33,7 @@
     -moz-transform-origin: left top;
 }
 .ui-block-a,.ui-block-b {
-    background-image: url('/images/white_brick_wall.png');
+    background-image: url('images/white_brick_wall.png');
     overflow: hidden;
 }
 #main {

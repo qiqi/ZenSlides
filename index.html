@@ -17,12 +17,16 @@
     <script src="bower_components/nouislider/distribute/jquery.nouislider.min.js"></script>
 
     <!-- ZenBoard references -->
+    <script src="js/auth.js"></script>
     <script src="js/zenBoard.js"></script>
 
     <style id="thumbnail-style"></style>
     <style id="control-style"></style>
 </head>
 <body style="overflow: hidden;">
+  <div data-role="page">
+    <a data-role="button" data-theme="a" onclick="firebaseLogin();">Log in with Google account</a>
+  </div>
   <div ng-controller="boardCtrl" data-role="page" class="ui-grid-a" style="overflow: hidden;">
     <div class="ui-block-a" style="height: 100vh; width: 20%;">
       <div data-role="controlgroup" data-type="horizontal" data-mini="true" class="float-above">

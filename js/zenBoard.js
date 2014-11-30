@@ -1,7 +1,4 @@
-﻿Firebase.INTERNAL.forceWebSockets();
-var firebaseRef = new Firebase("https://infinite-walls.firebaseio.com/pres");
-
-angular.module('zenBoard', ['firebase']).controller('boardCtrl', function ($scope, $sce, $firebase) {
+﻿angular.module('zenBoard', ['firebase']).controller('boardCtrl', function ($scope, $sce, $firebase) {
     $scope.Math = window.Math;
     $scope.$sce = $sce;
 

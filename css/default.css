@@ -13,7 +13,7 @@
 .thumbnail-outside {
     border: solid;
     border-width: 3px;
-    border-color: white;
+    border-color: #ccc;
     margin: 10px;
     padding: 0;
     overflow: hidden;

@@ -30,6 +30,18 @@
 </head>
 <body>
 <style>
+  .delete-slide-btn {
+    position:absolute;
+    top: 0px;
+    left: 450px;
+  }
+  .pres-container {
+    position: relative;
+    display: inline-block;
+    width: 460px;
+    height: 660px;
+    margin: 25px;
+  }
   .pres {
     overflow: hidden;
     padding: 20px;
@@ -51,25 +63,27 @@
 </style>
 <div data-role="page" ng-controller="chooserCtrl">
   <div data-role="header" data-position="fixed">
-      <h1> Zen Slides </h1>
+      <h1> ZenBoard Slides </h1>
       <input id="search" data-mini="true" data-inline="true" type="search" placeholder="Search your presentations">
       <div class="ui-btn-left">
-          <a data-role="button" data-icon="plus">New Presentation</a>
+          <a data-role="button" data-icon="plus" ng-click="newPres()">New Presentation</a>
       </div>
   </div>
   <div>
-    <div class="pres"></div>
-    <div class="pres"></div>
-    <div class="pres"></div>
-    <div class="pres"></div>
-    <div class="pres"></div>
-    <div class="pres"></div>
-    <div class="pres" ng-repeat="(presId, pres) in presentations" ng-click="openPres(presId)">
-      <div class="slide" ng-repeat="slide in pres.slides | limitTo: 3">
-        <md ng-model="slide.notes"></md>
+    <div class="pres-container" ng-repeat="(presId, pres) in presentations">
+      <a href="#delete{{presId}}" data-role="button" ng-click="deletePres(presId)" class="delete-slide-btn ui-btn ui-icon-delete ui-btn-icon-notext"></a>
+      <div class="pres" ng-click="openPres(presId)">
+        <div class="slide" ng-repeat="slide in pres.slides | limitTo: 3">
+          <md ng-model="slide.notes"></md>
+        </div>
       </div>
     </div>
   </div>
 </div>
+<script>
+    setTimeout( function() {
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    }, 2000);
+</script>
 </body>
 </html>

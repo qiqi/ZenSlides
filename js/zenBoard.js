@@ -162,18 +162,20 @@ directive('zenEditor', function() {
             $scope.zoomIn = function() { $scope.currentSlide.zoom ++; };
             $scope.zoomOut = function() { $scope.currentSlide.zoom --; };
         }, link: function(scope, element, attr) {
-            scope.$watch(function () {
-                return scope.pres && scope.pres.slides && scope.pres.selectedSlideId
-                    && scope.pres.slides[scope.pres.selectedSlideId];
-            }, function (slide) {
-                if (slide) {
-                    scope.currentSlide = slide;
+            scope.$watchGroup([
+                'pres', 'pres.slides', 'pres.selectedSlideId'
+            ], function () {
+                if (!scope.pres) {
+                    scope.pres = {};
                 }
+                if (!scope.pres.slides) {
+                    scope.pres.slides = {1000000: {}};
+                    scope.pres.selectedSlideId = 1000000;
+                }
+                scope.currentSlide = scope.pres.slides[scope.pres.selectedSlideId];
             })
 
-            var mathjaxTimeout = setTimeout( function() {
-                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-            }, 1000);
+            var mathjaxTimeout = null;
             scope.$watch('currentSlide.notes', function() {
                 var preview = $('#slide-' + scope.pres.selectedSlideId)[0];
                 if (preview) {
@@ -280,4 +282,17 @@ controller('chooserCtrl', function($scope, $firebase) {
     $scope.openPres = function(id) {
         window.location.replace('editor.html#?id=' + id);
     };
+    $scope.newPres = function() {
+        if ($scope.presentations) {
+            var id = GUID();
+            while (id in $scope.presentations) id = GUID();
+            $scope.openPres(id);
+        }
+    }
+    $scope.deletePres = function(id) {
+        if ($scope.presentations) {
+            delete $scope.presentations[id];
+            $scope.$apply();
+        }
+    }
 });

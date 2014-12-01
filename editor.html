@@ -32,5 +32,10 @@
   <div id="editor" data-role="page" class="ui-grid-a" style="overflow: hidden;">
     <zen-editor></zen-editor>
   </div>
+  <script>
+    setTimeout( function() {
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    }, 2000);
+  </script>
 </body>
 </html>

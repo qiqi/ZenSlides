@@ -2,7 +2,7 @@ angular.module('zenBoard', ['firebase', 'yaru22.md']).
 directive('zenEditor', function() {
     return {
         restrict: 'E',
-        templateUrl: 'editor.html',
+        templateUrl: 'zen-editor.html',
         controller: function ($scope, $firebase, $location) {
             $scope.Math = window.Math;
 
@@ -278,6 +278,6 @@ directive('ngRangeSlider', function() {
 controller('chooserCtrl', function($scope, $firebase) {
     $firebase(firebase.ref).$asObject().$bindTo($scope, 'presentations');
     $scope.openPres = function(id) {
-        window.location.replace('index-editor.html#?id=' + id);
+        window.location.replace('editor.html#?id=' + id);
     };
 });

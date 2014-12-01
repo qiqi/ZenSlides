@@ -22,7 +22,7 @@ var firebase = {
 function checkAuth() {
     var auth = firebase.root.getAuth();
     if (auth) {
-        firebase.ref = firebase.root.child(auth.uid);
+        firebase.ref = firebase.root.child(auth.uid).child('presentations');
         $(document).ready(function(){
             if ($('#login-button').length) {
                 // login screen

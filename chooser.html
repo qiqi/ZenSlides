@@ -1,0 +1,20 @@
+      <div style="height:40px;"></div>
+      <div class='thumbnail-outside' ng-repeat='(slideId, slide) in pres.slides | limitTo:4' ng-attr-id="slide-{{slideId}}" ng-class='{selected: isSlideSelected(slideId)}' ng-click='selectSlide(slideId);'>
+        <div class='thumbnail-inside'></div>
+      </div>
+      <script>
+        $(document).ready( function() {
+          function zoomThumbnails () {
+            var width = ($('.ui-block-a').width() - 40);
+            var zoom = width / 1600;
+            $('#thumbnail-style').html('.thumbnail-inside{'
+              + '-ms-zoom:' + zoom
+              + ';-moz-transform:scale(' + zoom + ')'
+              + ';-webkit-transform:scale(' + zoom + ');}\n'
+              + '.thumbnail-outside{width:' + width + 'px;'
+              + 'height:' + width * 2/3 + 'px;}');
+          }
+          zoomThumbnails();
+          $(window).resize(zoomThumbnails);
+        });
+      </script>

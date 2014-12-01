@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="zenBoard">
 <head>
     <meta charset="utf-8" />
     <title>ZenSlides</title>
@@ -18,13 +18,14 @@
 
     <!-- ZenBoard references -->
     <script src="js/auth.js"></script>
+    <script src="js/zenBoard.js"></script>
 
     <style id="thumbnail-style"></style>
     <style id="control-style"></style>
 </head>
 <body style="overflow: hidden;">
-  <div data-role="page">
-    <a id='login-button' data-role="button" data-theme="a" onclick="firebaseLogin();">Log in via Github</a>
+  <div id="editor" data-role="page" class="ui-grid-a" style="overflow: hidden;">
+    <zen-editor></zen-editor>
   </div>
 </body>
 </html>

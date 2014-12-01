@@ -1,4 +1,4 @@
-﻿body, .ui-grid-a, .ui-block-a, .ui-block-b {
+body, .ui-grid-a, .ui-block-a, .ui-block-b {
     background-image: url('../images/white_brick_wall.png');
 }
 .float-above {
@@ -27,7 +27,7 @@
 .ui-block-a,.ui-block-b {
     overflow: hidden;
 }
-#main, #slide-main {
+#main {
     width: 1600px;
     height: 1200px;
     position:relative;
@@ -43,20 +43,12 @@
     -webkit-transform: scale(0.1);
     -webkit-transform-origin: left top;
 }
-#slide-main {
-    z-index: 0;
-}
 #webview-box {
     position: absolute;
     border: dashed 3px;
     z-index: -99;
 }
-#webview-box {
-    position: absolute;
-    border: dashed 3px;
-    z-index: -99;
-}
-#webview, #slide-webview {
+#webview {
     width: 50%;
     height: 50%;
     z-index: -99;
@@ -65,10 +57,6 @@
     -moz-transform-origin: 0 0;
     -webkit-transform: scale(2);
     -webkit-transform-origin: 0 0;
-}
-#slide-webview {
-    z-index: 0;
-    border: none !important;
 }
 #window-outline {
     position:absolute;
@@ -88,11 +76,6 @@
     filter: alpha(opacity=80);
     -moz-opacity: .8;
 }
-.slide-blocker {
-    position: absolute;
-    z-index: 1;
-    background-color: white;
-}
 .transparent-selector {
     position:absolute;
     left:0;
@@ -102,4 +85,14 @@
     z-index:10000;
     background: transparent;
 }
-
+.slide-number {
+    position:absolute;
+    width: 100%;
+    text-align: right;
+}
+textarea#slide-notes {
+    position: relative;
+    height: 98% !important;
+    z-index: 10000;
+    overflow: scroll;
+}

@@ -1,36 +1,16 @@
-﻿angular.module('zenBoard', ['firebase']).
+angular.module('zenBoard', ['firebase', 'yaru22.md']).
 directive('zenEditor', function() {
     return {
         restrict: 'E',
         templateUrl: 'editor.html',
-        controller: function ($scope, $sce, $firebase) {
+        controller: function ($scope, $firebase, $location) {
             $scope.Math = window.Math;
-            $scope.$sce = $sce;
 
             $scope.pres = {};
             $scope.currentSlide = {};
             $scope.currentSlide.zoom = 0;
-            $firebase(firebase.ref.child('test-pres')).$asObject().$bindTo($scope, 'pres');
-
-            $scope.$watch(function () {
-                return $scope.pres && $scope.pres.slides && $scope.pres.selectedSlideId
-                    && $scope.pres.slides[$scope.pres.selectedSlideId];
-            }, function (slide) {
-                if (slide) {
-                    $scope.currentSlide = slide;
-                }
-            })
-
-            $scope.$watch('currentSlide.url', function (url) {
-                if (url && url.indexOf('http://') != 0 && url.indexOf('https://') != 0){
-                    url = 'http://' + url;
-                }
-                try {
-                    $('#webview').attr('src', url);
-                } catch (err) {
-                    $('#webview').attr('src', 'about:blank');
-                }
-            });
+            console.log($location.search().id);
+            $firebase(firebase.ref.child($location.search().id)).$asObject().$bindTo($scope, 'pres');
 
             $scope.isSlideSelected = function (slideId) {
                 return slideId == $scope.pres.selectedSlideId;
@@ -61,7 +41,7 @@ directive('zenEditor', function() {
                 var newId = 1000000;
                 for (var id in $scope.pres.slides) newId++;
                 $scope.pres.slides[newId] = {
-                    title: '                   One message',
+                    notes: '',
                     url: 'http://thelisteningpartner.cc/wp-content/uploads/2012/07/pres-zen-rocks.jpg',
                     left: 70,
                     right: 90,
@@ -151,8 +131,6 @@ directive('zenEditor', function() {
                 }
                 outerHeight = Math.max(outerHeight, 1200);
 
-                console.log(outerLeft,outerTop);
-
                 blocker.north.css('left', outerLeft + 'px');
                 blocker.north.css('top', outerTop + 'px');
                 blocker.north.css('width', outerWidth + 'px');
@@ -174,7 +152,6 @@ directive('zenEditor', function() {
 
                 $scope.currentSlide.zoom = Number($scope.currentSlide.zoom) || 0;
                 var zoom = Math.exp($scope.currentSlide.zoom * 0.1);
-                console.log(zoom);
                 web.css('width', (100/zoom) + '%');
                 web.css('height', (100/zoom) + '%');
                 web.css('-ms-zoom', zoom);
@@ -185,6 +162,40 @@ directive('zenEditor', function() {
             $scope.zoomIn = function() { $scope.currentSlide.zoom ++; };
             $scope.zoomOut = function() { $scope.currentSlide.zoom --; };
         }, link: function(scope, element, attr) {
+            scope.$watch(function () {
+                return scope.pres && scope.pres.slides && scope.pres.selectedSlideId
+                    && scope.pres.slides[scope.pres.selectedSlideId];
+            }, function (slide) {
+                if (slide) {
+                    scope.currentSlide = slide;
+                }
+            })
+
+            var mathjaxTimeout = null;
+            scope.$watch('currentSlide.notes', function() {
+                var preview = $('#slide-' + scope.pres.selectedSlideId)[0];
+                if (preview) {
+                    if (mathjaxTimeout) {
+                        clearTimeout(mathjaxTimeout);
+                    }
+                    mathjaxTimeout = setTimeout( function() {
+                        MathJax.Hub.Queue(["Typeset",MathJax.Hub,preview]);
+                    }, 1000);
+                }
+            });
+
+            var webview = $('#webview');
+            scope.$watch('currentSlide.url', function (url) {
+                if (url && url.indexOf('http://') != 0 && url.indexOf('https://') != 0){
+                    url = 'http://' + url;
+                }
+                try {
+                    webview.attr('src', url);
+                } catch (err) {
+                    webview.attr('src', 'about:blank');
+                }
+            });
+
             function zoomThumbnails () {
                 var width = ($('.ui-block-a').width() - 40);
                 $('#thumbnail-style').html('.thumbnail{'
@@ -220,109 +231,6 @@ directive('zenEditor', function() {
             $(window).resize(zoomMain);
 
             element.trigger('create');
-        }
-    };
-}).
-directive('zenSlide', function() {
-    return {
-        restrict: "E",
-        templateUrl: "zen-slide.html",
-        link: function(scope, element, attrs) {
-
-            var mainDiv = element.find('#slide-main');
-            function resizeElement() {
-                mainDiv.css('-webkit-transform', 'scale(' + ($(element).width() / 1600) + ')');
-                mainDiv.css('-moz-transform', 'scale(' + ($(element).width() / 1600) + ')');
-            }
-            $(document).ready(resizeElement);
-            $(window).resize(resizeElement);
-
-            var web = element.find('#slide-webview');
-            $scope.$watch('slide.url', function (url) {
-                if (url && url.indexOf('http://') != 0 && url.indexOf('https://') != 0){
-                    url = 'http://' + url;
-                }
-                try {
-                    web.attr('src', url);
-                } catch (err) {
-                    web.attr('src', 'about:blank');
-                }
-            });
-
-            var webBox = element.find('#slide-webview-box');
-            var blocker = {
-                west: element.find('#slide-blocker-west'),
-                east: element.find('#slide-blocker-east'),
-                north: element.find('#slide-blocker-south'),
-                south: element.find('#slide-blocker-north')
-            };
-            scope.$watchGroup(['slide.vSliderOutL',
-                                'slide.vSliderOutR',
-                                'slide.vSliderInL',
-                                'slide.vSliderInR',
-                                'slide.hSliderOutL',
-                                'slide.hSliderOutR',
-                                'slide.hSliderInL',
-                                'slide.hSliderInR',
-                                'slide.zoom'], function() {
-                var outerLeft = scope.slide.hSliderOutL * 16;
-                var outerTop = scope.slide.vSliderOutL * 12;
-                var outerWidth = (scope.slide.hSliderOutR
-                                - scope.slide.hSliderOutL) * 16;
-                var outerHeight = (scope.slide.vSliderOutR
-                                 - scope.slide.vSliderOutL) * 12;
-                var innerLeft = scope.slide.hSliderInL * 16;
-                var innerTop = scope.slide.vSliderInL * 12;
-                var innerWidth = (scope.slide.hSliderInR
-                               - scope.slide.hSliderInL) * 16;
-                var innerHeight = (scope.slide.vSliderInR
-                                - scope.slide.vSliderInL) * 12;
-                webBox.css('left', outerLeft + 'px');
-                webBox.css('top', outerTop + 'px');
-                webBox.css('width', outerWidth + 'px');
-                webBox.css('height', outerHeight + 'px');
-
-                if (outerLeft > 0) {
-                    outerWidth += outerLeft;
-                    outerLeft = 0;
-                }
-                outerWidth = Math.max(outerWidth, 1600);
-                if (outerTop > 0) {
-                    outerHeight += outerTop;
-                    outerTop = 0;
-                }
-                outerHeight = Math.max(outerHeight, 1200);
-
-                console.log(outerLeft,outerTop);
-
-                blocker.north.css('left', outerLeft + 'px');
-                blocker.north.css('top', outerTop + 'px');
-                blocker.north.css('width', outerWidth + 'px');
-                blocker.north.css('height', innerTop - outerTop + 'px');
-                blocker.south.css('left', outerLeft + 'px');
-                blocker.south.css('top', innerTop + innerHeight + 'px');
-                blocker.south.css('width', outerWidth + 'px');
-                blocker.south.css('height', outerTop + outerHeight
-                                          - innerTop - innerHeight + 'px');
-                blocker.west.css('left', outerLeft + 'px');
-                blocker.west.css('top', innerTop + 'px');
-                blocker.west.css('width', innerLeft - outerLeft + 'px');
-                blocker.west.css('height', innerHeight + 'px');
-                blocker.east.css('left', innerLeft + innerWidth + 'px');
-                blocker.east.css('top', innerTop + 'px');
-                blocker.east.css('width', outerLeft + outerWidth
-                                        - innerLeft - innerWidth + 'px');
-                blocker.east.css('height', innerHeight + 'px');
-
-                scope.slide.zoom = Number(scope.slide.zoom) || 0;
-                var zoom = Math.exp(scope.slide.zoom * 0.1);
-                web.css('width', (100/zoom) + '%');
-                web.css('height', (100/zoom) + '%');
-                web.css('-ms-zoom', zoom);
-                web.css('-moz-transform', 'scale(' + zoom + ')');
-                web.css('-webkit-transform', 'scale(' + zoom + ')');
-            });
-            
         }
     };
 }).
@@ -363,5 +271,11 @@ directive('ngRangeSlider', function() {
                 slider.val([null, newTo]);
             });
         }
+    };
+}).
+controller('chooserCtrl', function($scope, $firebase) {
+    $firebase(firebase.ref).$asObject().$bindTo($scope, 'presentations');
+    $scope.openPres = function(id) {
+        window.location.replace('index-editor.html#?id=' + id);
     };
 });

@@ -1,7 +1,7 @@
-<div class="ui-grid-a" style="overflow: hidden;">
+<div class="ui-grid-b my-breakpoint" style="overflow: hidden;">
   <div class="ui-block-a" style="height: 100vh; width: 20%;">
     <div data-role="controlgroup" data-type="horizontal" data-mini="true" class="float-above">
-      <a ng-click="moveSlideUp()" class="ui-btn ui-icon-back ui-btn-icon-notext" data-role="button">Back</a>
+      <a onclick="window.location.replace('index-chooser.html');" class="ui-btn ui-icon-back ui-btn-icon-notext" data-role="button">Back</a>
       <a ng-click="moveSlideUp()" class="ui-btn ui-icon-arrow-u ui-btn-icon-notext" data-role="button">Up</a>
       <a ng-click="moveSlideDown()" class="ui-btn ui-icon-arrow-d ui-btn-icon-notext" data-role="button">Down</a>
       <a ng-click="addSlide()" class="ui-btn ui-icon-plus ui-btn-icon-notext" data-role="button">Add</a>
@@ -10,12 +10,13 @@
     <div style="height:100vh; width:100%; overflow-y: scroll;">
       <div style="height:40px;"></div>
       <div class='thumbnail' ng-repeat='(slideId, slide) in pres.slides' ng-attr-id="slide-{{slideId}}" ng-class='{selected: isSlideSelected(slideId)}' ng-click='selectSlide(slideId);'></zen-slide>
-        <zen-slide style="position:absolute; left:0; top:0; width:100%; height:100%;"></zen-slide>
+          <div class="slide-number">Slide {{slideId-1000000}}</div>
+          <md ng-model="slide.notes"></md>
         <div class="transparent-selector"></div>
       </div>
     </div>
   </div>
-  <div class="ui-block-b" style="height:100vh; width:80%;">
+  <div class="ui-block-b" style="height:100vh; width:60%;">
     <div class="float" id="main-outer">
       <div id="main">
         <div id="webview-box">
@@ -43,5 +44,8 @@
       <a ng-click="zoomIn();" class="ui-btn ui-btn-icon-notext ui-icon-plus">Zoom In</a>
       <a ng-click="zoomOut();" class="ui-btn ui-btn-icon-notext ui-icon-minus">Zoom Out</a>
     </div>
+  </div>
+  <div class="ui-block-c" style="height:100vh; width:20%;">
+    <textarea id="slide-notes" ng-model="currentSlide.notes" placeholder="Notes in markdown"></textarea>
   </div>
 </div>

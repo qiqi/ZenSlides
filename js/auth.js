@@ -13,8 +13,8 @@ if (firebase.root.getAuth()) {
 }
 
 function firebaseLogin() {
-    firebase.root.authWithOAuthPopup('github', function(err, authData) {
-        if (!err && autData.uid) {
+    firebase.root.authWithOAuthRedirect('github', function(err, authData) {
+        if (!err && authData.uid) {
             firebase.ref = firebase.root.child(authData.uid);
             window.location.replace('index-chooser.html');
         }

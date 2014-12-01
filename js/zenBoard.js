@@ -171,7 +171,9 @@ directive('zenEditor', function() {
                 }
             })
 
-            var mathjaxTimeout = null;
+            var mathjaxTimeout = setTimeout( function() {
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            }, 1000);
             scope.$watch('currentSlide.notes', function() {
                 var preview = $('#slide-' + scope.pres.selectedSlideId)[0];
                 if (preview) {
@@ -179,7 +181,7 @@ directive('zenEditor', function() {
                         clearTimeout(mathjaxTimeout);
                     }
                     mathjaxTimeout = setTimeout( function() {
-                        MathJax.Hub.Queue(["Typeset",MathJax.Hub,preview]);
+                        MathJax.Hub.Queue(["Typeset", MathJax.Hub, preview]);
                     }, 1000);
                 }
             });

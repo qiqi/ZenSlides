@@ -8,15 +8,18 @@ function checkAuth() {
     if (auth) {
         firebase.ref = firebase.root.child(auth.uid);
         $(document).ready( function() {
-            if ($('#login-button').length) {
-                window.location.replace('index-chooser.html');
-            }
+            window.location.replace('index-chooser.html');
         });
     }
 }
 
+if ($('#login-button').length) {
+    // login screen
+    checkAuth();
+}
+
 function firebaseLogin() {
     firebase.root.authWithOAuthRedirect('github', function(err) {
-        window.location.reload();
+        checkAuth();
     });
 }

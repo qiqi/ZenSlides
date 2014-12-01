@@ -11,7 +11,7 @@ function checkAuth() {
     }
 }
 
-$(document).ready( function()) {
+$(document).ready( function() {
     if ($('#login-button').length) {
         // login screen
         checkAuth();

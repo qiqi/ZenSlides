@@ -7,16 +7,14 @@ function checkAuth() {
     var auth = firebase.root.getAuth();
     if (auth) {
         firebase.ref = firebase.root.child(auth.uid);
-        window.location.replace('index-chooser.html');
+        if ($('#login-button').length) {
+            // login screen
+            window.location.replace('index-chooser.html');
+        }
     }
 }
 
-$(document).ready( function() {
-    if ($('#login-button').length) {
-        // login screen
-        checkAuth();
-    }
-});
+$(document).ready(checkAuth);
 
 function firebaseLogin() {
     firebase.root.authWithOAuthRedirect('github', function(err) {

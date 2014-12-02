@@ -1,3 +1,6 @@
+.landing-header {
+    font: 15vw arial, sans-serif;
+}
 body, .ui-grid-a, .ui-block-a, .ui-block-b {
     background-image: url('../images/white_brick_wall.png');
 }

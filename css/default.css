@@ -4,6 +4,36 @@
 body, .ui-grid-a, .ui-block-a, .ui-block-b {
     background-image: url('../images/white_brick_wall.png');
 }
+  .delete-slide-btn {
+    position:absolute;
+    top: 0px;
+    left: 450px;
+  }
+  .pres-container {
+    position: relative;
+    display: inline-block;
+    width: 460px;
+    height: 660px;
+    margin: 25px;
+  }
+  .pres {
+    overflow: hidden;
+    padding: 20px;
+    margin: 30px;
+    border: solid 1px;
+    display: inline-block;
+    width: 400px;
+    height: 600px;
+    vertical-align: top;
+    cursor: pointer;
+  }
+  .slide {
+    padding: 20px;
+    margin: 5px;
+    width:350px;
+    overflow:hidden;
+    border:solid 1px;
+  }
 .float-above {
     position: absolute;
     z-index: 100;

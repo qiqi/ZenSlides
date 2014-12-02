@@ -24,7 +24,7 @@ function checkAuth() {
     if (auth) {
         firebase.ref = firebase.root.child(auth.uid).child('presentations');
         $(document).ready(function(){
-            if ($('#login-button').length) {
+            if ($('.login-button').length) {
                 // login screen
                 window.location.replace('chooser.html');
             }

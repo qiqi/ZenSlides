@@ -48,22 +48,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <body>
 <div data-role="page" ng-controller="chooserCtrl">
   <div data-role="header" data-position="fixed">
-      <h1> ZenBoard Slides </h1>
-      <input id="search" data-mini="true" data-inline="true" type="search" placeholder="Search your presentations">
       <div class="ui-btn-left">
-          <a data-role="button" data-icon="plus" ng-click="newPres()">New Presentation</a>
+        <input id="search" data-mini="true" data-inline="true" type="search" placeholder="Search your presentations">
       </div>
+      <h1> ZenBoard Slides </h1>
       <div class="ui-btn-right">
+          <a data-role="button" data-icon="plus" ng-click="newPres()">New Presentation</a>
           <a data-role="button" onclick="firebaseLogout();">Logout</a>
       </div>
   </div>
-  <div>
-    <div class="pres-container" ng-repeat="(presId, pres) in presentations">
-      <a href="#delete{{presId}}" data-role="button" ng-click="deletePres(presId)" class="delete-slide-btn ui-btn ui-icon-delete ui-btn-icon-notext"></a>
-      <div class="pres" ng-click="openPres(presId)">
-        <div class="slide" ng-repeat="slide in pres.slides | limitTo: 3">
-          <md ng-model="slide.notes"></md>
-        </div>
+  <div class="pres-container" ng-repeat="(presId, pres) in presentations">
+    <a href="#delete{{presId}}" data-role="button" ng-click="deletePres(presId)" class="delete-slide-btn ui-btn ui-icon-delete ui-btn-icon-notext"></a>
+    <div class="pres" ng-click="openPres(presId)">
+      <div class="slide" ng-repeat="slide in pres.slides | limitTo: 3">
+        <md ng-model="slide.notes"></md>
       </div>
     </div>
   </div>

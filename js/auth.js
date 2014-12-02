@@ -43,7 +43,9 @@ function firebaseLogin() {
 function firebaseLogout() {
     if (firebase.ref) {
         firebase.ref.unauth();
+        delete firebase.ref;
     }
+    window.location.replace('index.html');
 }
 
 function GUID() {

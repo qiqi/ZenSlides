@@ -46,44 +46,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <style id="control-style"></style>
 </head>
 <body>
-<style>
-  .delete-slide-btn {
-    position:absolute;
-    top: 0px;
-    left: 450px;
-  }
-  .pres-container {
-    position: relative;
-    display: inline-block;
-    width: 460px;
-    height: 660px;
-    margin: 25px;
-  }
-  .pres {
-    overflow: hidden;
-    padding: 20px;
-    margin: 30px;
-    border: solid 1px;
-    display: inline-block;
-    width: 400px;
-    height: 600px;
-    vertical-align: top;
-    cursor: pointer;
-  }
-  .slide {
-    padding: 20px;
-    margin: 5px;
-    width:350px;
-    overflow:hidden;
-    border:solid 1px;
-  }
-</style>
 <div data-role="page" ng-controller="chooserCtrl">
   <div data-role="header" data-position="fixed">
       <h1> ZenBoard Slides </h1>
       <input id="search" data-mini="true" data-inline="true" type="search" placeholder="Search your presentations">
       <div class="ui-btn-left">
           <a data-role="button" data-icon="plus" ng-click="newPres()">New Presentation</a>
+      </div>
+      <div class="ui-btn-right">
+          <a data-role="button" onclick="firebaseLogout();">Logout</a>
       </div>
   </div>
   <div>

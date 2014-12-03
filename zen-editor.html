@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <div style="height:50px;"></div>
       <div class='thumbnail' ng-repeat='(slideId, slide) in presentation.slides' ng-attr-id="slide-{{slideId}}" ng-class='{selected: isSlideSelected(slideId)}' ng-click='selectSlide(slideId);'>
           <div class="slide-number">{{slideId-1000000}}&nbsp;</div>
-          <md ng-model="slide.notes"></md>
+          <md class='thumbnail-md' ng-model="slide.notes"></md>
         <div class="transparent-selector"></div>
       </div>
     </div>
@@ -63,6 +63,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </div>
   </div>
   <div class="ui-block-c" style="height:100vh; width:24%;">
-    <textarea id="slide-notes" ng-model="currentSlide.notes" placeholder="Notes in markdown"></textarea>
+    <textarea id="slide-notes" ng-model="currentSlide.notes" placeholder="Notes in markdown" ng-mouseover="isMouseOverNotes=true" ng-mouseleave="isMouseOverNotes=false"></textarea>
   </div>
 </div>

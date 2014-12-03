@@ -113,7 +113,8 @@ directive('zenEditor', function() {
                 north: $('#blocker-south'),
                 south: $('#blocker-north')
             };
-            $scope.$watchGroup(['currentSlide.vSliderOutL',
+            $scope.$watchGroup(['showPage',
+                                'currentSlide.vSliderOutL',
                                 'currentSlide.vSliderOutR',
                                 'currentSlide.vSliderInL',
                                 'currentSlide.vSliderInR',
@@ -324,6 +325,14 @@ controller('loginCtrl', function($scope, $firebase){
         delete $scope.firebaseRef;
         $scope.showPage = 'login';
     }
+
+    $scope.$watch('showPage', function() {
+        [100, 500, 2000, 10000, 300000].forEach( function(dt) {
+            setTimeout(function() {
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            }, dt);
+        } );
+    });
 
     $scope.openPres = function(id) {
         var ref = $scope.firebaseRef;

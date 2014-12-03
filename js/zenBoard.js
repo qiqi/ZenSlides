@@ -14,25 +14,28 @@
 //. You should have received a copy of the GNU Affero General Public License
 //. along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+Firebase.INTERNAL.forceWebSockets();
+firebaseRoot = new Firebase("https://zenboard.firebaseio.com/private");
+
 angular.module('zenBoard', ['firebase', 'yaru22.md']).
 directive('zenEditor', function() {
     return {
         restrict: 'E',
         templateUrl: 'zen-editor.html',
-        controller: function ($scope, $firebase, $location) {
+        scope: {
+            presentation: '='
+        },
+        controller: function ($scope) {
             $scope.Math = window.Math;
 
-            $scope.pres = {};
             $scope.currentSlide = {};
             $scope.currentSlide.zoom = 0;
-            console.log($location.search().id);
-            $firebase(firebase.ref.child($location.search().id)).$asObject().$bindTo($scope, 'pres');
 
             $scope.isSlideSelected = function (slideId) {
-                return slideId == $scope.pres.selectedSlideId;
+                return slideId == $scope.presentation.selectedSlideId;
             }
             $scope.selectSlide = function (slideId) {
-                $scope.pres.selectedSlideId = slideId;
+                $scope.presentation.selectedSlideId = slideId;
             }
 
             function swapItems(data, id1, id2) {
@@ -43,22 +46,21 @@ directive('zenEditor', function() {
                 }
             }
             $scope.addSlide = function () {
-                var insertId = $scope.pres && $scope.pres.selectedSlideId;
+                var insertId = $scope.presentation.selectedSlideId;
                 $scope.appendSlide();
                 // left-shift the new slide till it reaches the insert position
-                for (var id = $scope.pres.selectedSlideId - 1; id > insertId; --id) {
-                    swapItems($scope.pres.slides, id + 1, id);
-                    $scope.pres.selectedSlideId = id;
+                for (var id = $scope.presentation.selectedSlideId - 1; id > insertId; --id) {
+                    swapItems($scope.presentation.slides, id + 1, id);
+                    $scope.presentation.selectedSlideId = id;
                 }
             };
             $scope.appendSlide = function () {
-                $scope.pres = $scope.pres || {};
-                $scope.pres.slides = $scope.pres.slides || {};
+                $scope.presentation.slides = $scope.presentation.slides || {};
                 var newId = 1000000;
-                for (var id in $scope.pres.slides) newId++;
-                $scope.pres.slides[newId] = {
+                for (var id in $scope.presentation.slides) newId++;
+                $scope.presentation.slides[newId] = {
                     notes: '',
-                    url: 'http://thelisteningpartner.cc/wp-content/uploads/2012/07/pres-zen-rocks.jpg',
+                    url: 'https://dl.dropbox.com/s/5r5skoucwoskq4s/tumblr_luo25sxgzi1qdyb9oo1_400.png',
                     left: 70,
                     right: 90,
                     shiftX: -19,
@@ -68,36 +70,36 @@ directive('zenEditor', function() {
                     bottom: 60,
                     shiftY: -6
                 };
-                $scope.pres.selectedSlideId = newId;
+                $scope.presentation.selectedSlideId = newId;
             };
             $scope.deleteSlide = function () {
-                if ($scope.pres && $scope.pres.slides && $scope.pres.selectedSlideId) {
+                if ($scope.presentation.slides && $scope.presentation.selectedSlideId) {
                     // left-shift the new slide till it reaches the insert position
-                    for (var id = Number($scope.pres.selectedSlideId) + 1;
-                            id in $scope.pres.slides; ++id) {
-                        swapItems($scope.pres.slides, id - 1, id);
+                    for (var id = Number($scope.presentation.selectedSlideId) + 1;
+                            id in $scope.presentation.slides; ++id) {
+                        swapItems($scope.presentation.slides, id - 1, id);
                     }
-                    delete $scope.pres.slides[id - 1];
-                    if (id - 1 == $scope.pres.selectedSlideId && id > 1000000) {
-                        $scope.pres.selectedSlideId--;
+                    delete $scope.presentation.slides[id - 1];
+                    if (id - 1 == $scope.presentation.selectedSlideId && id > 1000000) {
+                        $scope.presentation.selectedSlideId--;
                     }
                 }
             };
             $scope.moveSlideUp = function () {
-                if ($scope.pres && $scope.pres.slides && $scope.pres.selectedSlideId) {
-                    var id = Number($scope.pres.selectedSlideId);
-                    if ((id - 1) in $scope.pres.slides) {
-                        swapItems($scope.pres.slides, id - 1, id);
-                        $scope.pres.selectedSlideId = id - 1;
+                if ($scope.presentation.slides && $scope.presentation.selectedSlideId) {
+                    var id = Number($scope.presentation.selectedSlideId);
+                    if ((id - 1) in $scope.presentation.slides) {
+                        swapItems($scope.presentation.slides, id - 1, id);
+                        $scope.presentation.selectedSlideId = id - 1;
                     }
                 }
             };
             $scope.moveSlideDown = function () {
-                if ($scope.pres && $scope.pres.slides && $scope.pres.selectedSlideId) {
-                    var id = Number($scope.pres.selectedSlideId);
-                    if ((id + 1) in $scope.pres.slides) {
-                        swapItems($scope.pres.slides, id + 1, id);
-                        $scope.pres.selectedSlideId = id + 1;
+                if ($scope.presentation.slides && $scope.presentation.selectedSlideId) {
+                    var id = Number($scope.presentation.selectedSlideId);
+                    if ((id + 1) in $scope.presentation.slides) {
+                        swapItems($scope.presentation.slides, id + 1, id);
+                        $scope.presentation.selectedSlideId = id + 1;
                     }
                 }
             };
@@ -178,22 +180,20 @@ directive('zenEditor', function() {
             $scope.zoomIn = function() { $scope.currentSlide.zoom ++; };
             $scope.zoomOut = function() { $scope.currentSlide.zoom --; };
         }, link: function(scope, element, attr) {
-            scope.$watchGroup([
-                'pres', 'pres.slides', 'pres.selectedSlideId'
-            ], function () {
-                if (!scope.pres) {
-                    scope.pres = {};
+            scope.$watch(
+                'presentation.slides[presentation.selectedSlideId]',
+            function () {
+                console.log(scope.presentation.selectedSlideId);
+                if (!scope.presentation.slides) {
+                    scope.presentation.slides = {1000000: {}};
+                    scope.presentation.selectedSlideId = 1000000;
                 }
-                if (!scope.pres.slides) {
-                    scope.pres.slides = {1000000: {}};
-                    scope.pres.selectedSlideId = 1000000;
-                }
-                scope.currentSlide = scope.pres.slides[scope.pres.selectedSlideId];
+                scope.currentSlide = scope.presentation.slides[scope.presentation.selectedSlideId];
             })
 
             var mathjaxTimeout = null;
             scope.$watch('currentSlide.notes', function() {
-                var preview = $('#slide-' + scope.pres.selectedSlideId)[0];
+                var preview = $('#slide-' + scope.presentation.selectedSlideId)[0];
                 if (preview) {
                     if (mathjaxTimeout) {
                         clearTimeout(mathjaxTimeout);
@@ -217,7 +217,7 @@ directive('zenEditor', function() {
             });
 
             function zoomThumbnails () {
-                var width = ($('.ui-block-a').width() - 40);
+                var width = ($('.ui-block-a').width() - 80);
                 $('#thumbnail-style').html('.thumbnail{'
                   + 'width:' + width + 'px;'
                   + 'height:' + width * 3/4 + 'px;}');
@@ -226,24 +226,24 @@ directive('zenEditor', function() {
             $(window).resize(zoomThumbnails);
 
             function zoomMain () {
-              var width = ($('.ui-block-b').width() - 200);
-              var height = ($(window).height() - 220);
+              var width = ($('.ui-block-b').width() - 100);
+              var height = ($(window).height() - 200);
               var left = $('.ui-block-a').width() + 10;
-              var zoom = Math.min(width / 1600, height / 1200);
+              var zoom = Math.min((width - 80) / 1600, height / 1200) * 0.9;
               $('#control-style').html(
                   '#main{-ms-zoom:' + zoom + ';' + '-moz-transform:scale(' + zoom + ');'
                 + '-webkit-transform:scale(' + zoom + ');}\n'
                 + '#main-outer{top:' + (height - 1200*zoom)/2 + 'px;'
                 + 'left:' + (left + (width - 1600*zoom)/2) + 'px;}\n'
-                + '#v-sliders{top:0; left:' + (left + width + 40) + 'px;}\n'
-                + '#h-sliders{left:' + left + 'px; top:' + (height + 20) + 'px;}\n'
-                + '#zoom{left:' + (left + width + 40) + 'px;'
-                + ' top:' + (height + 40) + 'px;}');
-              $('#v-sliders').height(height + 20);
+                + '#v-sliders{top:20px; left:' + (left + width * 0.95 - 20) + 'px;}\n'
+                + '#h-sliders{left:' + left + 'px; top:' + (height - 20) + 'px;}\n'
+                + '#zoom{left:' + (left + width * 0.95 - 20) + 'px;'
+                + ' top:' + (height - 20) + 'px;}');
+              $('#v-sliders').height(height * 0.9);
               $('#v-sliders').width(160);
-              $('#h-sliders').width(width + 40);
-              $('.v-slider').height(height);
-              $('.h-slider').width(width);
+              $('#h-sliders').width(width * 0.9);
+              $('.v-slider').height(height * 0.9 - 40);
+              $('.h-slider').width(width * 0.9 - 40);
               $('.url').width(width);
               $('#zoom').width(80);
             }
@@ -266,6 +266,7 @@ directive('ngRangeSlider', function() {
             slider.noUiSlider({
                 start: [scope.ngStart || 0, scope.ngTo || 100],
                 orientation: attrs.orientation,
+                connect: true,
                 range: { 'min': Number(attrs.min),
                          'max': Number(attrs.max) }
             });
@@ -293,10 +294,39 @@ directive('ngRangeSlider', function() {
         }
     };
 }).
-controller('chooserCtrl', function($scope, $firebase) {
-    $firebase(firebase.ref).$asObject().$bindTo($scope, 'presentations');
+controller('loginCtrl', function($scope, $firebase){
+    $scope.showPage = 'login';
+    $scope.presentation = {};
+    loginIfAuthenticated();
+    function loginIfAuthenticated() {
+        var auth = firebaseRoot.getAuth();
+        if (auth) {
+            var ref = firebaseRoot.child(auth.uid).child('presentations');
+            $scope.firebaseRef = ref;
+            $firebase(ref).$asObject().$bindTo($scope, 'presentations');
+            if ($scope.showPage == 'login') {
+                $scope.showPage = 'chooser';
+            }
+        }
+    }
+
+    $scope.githubLogin = function() {
+        firebaseRoot.authWithOAuthRedirect('github', function() {
+            $scope.$apply(checkAuth);
+        });
+    }
+
+    $scope.firebaseLogout = function() {
+        $scope.firebaseRef.unauth();
+        $scope.showPage = 'login';
+    }
+
     $scope.openPres = function(id) {
-        window.location.replace('editor.html#?id=' + id);
+        var ref = $scope.firebaseRef;
+        if (ref) {
+            $scope.presentation = $scope.presentations[id];
+            $scope.showPage = 'editor';
+        }
     };
     $scope.newPres = function() {
         if ($scope.presentations) {

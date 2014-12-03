@@ -23,8 +23,14 @@ body, .ui-grid-a, .ui-block-a, .ui-block-b {
 }
 .delete-slide-btn {
   position:absolute;
-  top: 0px;
-  left: 380px;
+  top: 5px;
+  left: 375px;
+}
+.search-container {
+  margin-top: 8vw;
+  margin-left: 10vw;
+  margin-right: 10vw;
+  margin-bottom: 2vw;
 }
 .pres-container {
   position: relative;
@@ -37,19 +43,26 @@ body, .ui-grid-a, .ui-block-a, .ui-block-b {
   overflow: hidden;
   padding: 20px;
   margin: 30px;
-  border: solid 1px;
+  border: solid 2px #ccc;
   display: inline-block;
   width: 320px;
   height: 360px;
   vertical-align: top;
   cursor: pointer;
 }
+.pres.selected {
+  border: solid 2px #38c;
+}
 .slide {
   padding: 20px;
   margin: 5px;
   width:270px;
   overflow:hidden;
-  border:solid 1px;
+  border:inherit;
+}
+
+.thumbnail-control {
+    padding: 10px;
 }
 .float-above {
     position: absolute;
@@ -66,7 +79,7 @@ body, .ui-grid-a, .ui-block-a, .ui-block-b {
     border: solid;
     border-width: 3px;
     border-color: #ccc;
-    margin: 10px;
+    margin: 25px;
     padding: 0;
     overflow: hidden;
     background-color: white;
@@ -77,14 +90,21 @@ body, .ui-grid-a, .ui-block-a, .ui-block-b {
 .ui-block-a,.ui-block-b {
     overflow: hidden;
 }
+.overflow-hidden {
+    overflow: hidden !important;
+    margin: 0 !important;
+    margin-top: 0 !important;
+    padding: 0 !important;
+    padding-top: 0 !important;
+}
 #main {
     width: 1600px;
     height: 1200px;
     position:relative;
     background-color: white;
-    border: none;
+    border:solid #38c 5px;
     z-index:-1000;
-    overflow: visible;
+    overflow: hidden;
     top: 0;
     left: 0;
     -ms-zoom: 0.1;
@@ -93,10 +113,16 @@ body, .ui-grid-a, .ui-block-a, .ui-block-b {
     -webkit-transform: scale(0.1);
     -webkit-transform-origin: left top;
 }
+#main.selected {
+    overflow: visible;
+}
 #webview-box {
     position: absolute;
-    border: dashed 3px;
+    border: dashed white 3px;
     z-index: -99;
+}
+#webview-box.selected {
+    border: dashed black 3px;
 }
 #webview {
     width: 50%;
@@ -108,23 +134,30 @@ body, .ui-grid-a, .ui-block-a, .ui-block-b {
     -webkit-transform: scale(2);
     -webkit-transform-origin: 0 0;
 }
+iframe {
+    border:none;
+}
 #window-outline {
     position:absolute;
     top:0;
     left:0;
     width:100%;
     height:100%;
-    border:solid 5px;
+    margin: -5px;
+    border:solid #38c 5px;
     z-index: -1;
     background-color: transparent;
 }
 .blocker {
     position: absolute;
     z-index: -98;
-    background-image: url('../images/white_wall.png');
+    background-color:  white;
+}
+.blocker.selected {
     opacity: .8;
     filter: alpha(opacity=80);
     -moz-opacity: .8;
+    background-image: url('../images/white_wall.png');
 }
 .transparent-selector {
     position:absolute;
@@ -142,7 +175,9 @@ body, .ui-grid-a, .ui-block-a, .ui-block-b {
 }
 textarea#slide-notes {
     position: relative;
-    height: 98% !important;
+    height: 96% !important;
+    margin-top: 5% !important;
     z-index: 10000;
     overflow: scroll;
+    resize: none;
 }

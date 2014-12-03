@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<!--
+This file is part of ZenSlides, the web tool for preparing a ZenBoard presentation.
+Copyright (C) 2014 Qiqi Wang
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html ng-app="zenBoard">
+<head>
+    <meta charset="utf-8" />
+    <title>ZenBoard Slides</title>
+
+    <link rel="stylesheet" type="text/css" href='bower_components/jquery-mobile/jquery.mobile-1.4.5.css'/>
+    <link rel="stylesheet" type="text/css" href='bower_components/nouislider/distribute/jquery.nouislider.min.css'/>
+    <link rel="stylesheet" type="text/css" href='css/default.css'/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src='bower_components/angular/angular.js'></script>
+    <script src="bower_components/firebase/firebase.js"></script>
+    <script src="bower_components/angularfire/dist/angularfire.min.js"></script>
+    <script src="bower_components/marked/lib/marked.js"></script>
+    <script src="bower_components/angular-md/dist/angular-md.min.js"></script>
+
+    <script src='bower_components/jquery-mobile/jquery.mobile-1.4.5.min.js'></script>
+    <script src="bower_components/nouislider/distribute/jquery.nouislider.min.js"></script>
+    <script type="text/javascript"
+      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- ZenBoard references -->
+    <script src="js/zenBoard.js"></script>
+
+    <style id="thumbnail-style"></style>
+    <style id="control-style"></style>
+</head>
+<body ng-controller="loginCtrl" ng-class="{'overflow-hidden':showPage=='editor'}">
+<div data-role="page" ng-class="{'overflow-hidden':showPage=='editor'}">
+  <div ng-show="showPage=='login'">
+    <div class="landing-header">ZenBoard</div>
+    <div class="landing-subheader">Slides</div>
+    <div class="button-wrapper">
+      <a class='login-button' data-role="button" data-theme="a">Experience the Anti-Powerpoint</a>
+    </div>
+    <div class="button-wrapper"> </div>
+    <div class="button-wrapper">
+      <a class='login-button' data-role="button" data-theme="a" ng-click="githubLogin();">Log in via Github</a>
+      <a class='login-button' data-role="button" data-theme="a" ng-click="firebaseLogin();">Log in via Google</a>
+      <a class='login-button' data-role="button" data-theme="a" ng-click="firebaseLogin();">Log in via Twitter</a>
+    </div>
+    <div class="landing-footer">
+        <a href="https://github.com/qiqi/ZenSlides" style="color:black">
+            https://github.com/qiqi/ZenSlides
+        </a>
+    </div>
+  </div>
+
+  <div ng-show="showPage=='chooser'">
+    <div data-role="header" data-position="fixed">
+        <h1> ZenBoard Slides </h1>
+        <div class="ui-btn-left">
+            <a data-role="button" data-icon="plus" ng-click="newPres()">New Presentation</a>
+        </div>
+        <div class="ui-btn-right">
+            <a data-role="button" ng-click="firebaseLogout()">Logout</a>
+        </div>
+    </div>
+    <div data-role="content">
+    <div class="search-container">
+      <input id="search" type="search" data-theme="c" placeholder="Search your presentations">
+    </div>
+    <div class="pres-container" ng-repeat="(presId, pres) in presentations" ng-mouseover="slideSelected=true" ng-mouseleave="slideSelected=false">
+      <a href="#delete{{presId}}" data-role="button" data-theme="a" ng-show="slideSelected" ng-click="deletePres(presId)" class="delete-slide-btn ui-btn ui-icon-delete ui-btn-icon-notext"></a>
+      <div class="pres" ng-class="{selected: slideSelected}" ng-click="openPres(presId)">
+        <div class="slide" ng-repeat="slide in pres.slides | limitTo: 3">
+          <md ng-model="slide.notes"></md>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <zen-editor presentation='presentation' ng-show="showPage=='editor'"></zen-editor>
+
+  <script>
+      setTimeout( function() {
+          MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+      }, 2000);
+  </script>
+</body>
+</html>

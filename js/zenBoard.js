@@ -23,7 +23,8 @@ directive('zenEditor', function() {
         restrict: 'E',
         templateUrl: 'zen-editor.html',
         scope: {
-            presentation: '='
+            presentation: '=',
+            showPage: '='
         },
         controller: function ($scope) {
             $scope.Math = window.Math;
@@ -183,7 +184,6 @@ directive('zenEditor', function() {
             scope.$watch(
                 'presentation.slides[presentation.selectedSlideId]',
             function () {
-                console.log(scope.presentation.selectedSlideId);
                 if (!scope.presentation.slides) {
                     scope.presentation.slides = {1000000: {}};
                     scope.presentation.selectedSlideId = 1000000;
@@ -298,9 +298,13 @@ controller('loginCtrl', function($scope, $firebase){
     $scope.showPage = 'login';
     $scope.presentation = {};
     loginIfAuthenticated();
+    var authInterval = setInterval(loginIfAuthenticated, 1000);
     function loginIfAuthenticated() {
         var auth = firebaseRoot.getAuth();
         if (auth) {
+            if (authInterval) {
+                clearInterval(authInterval);
+            }
             var ref = firebaseRoot.child(auth.uid).child('presentations');
             $scope.firebaseRef = ref;
             $firebase(ref).$asObject().$bindTo($scope, 'presentations');
@@ -312,12 +316,12 @@ controller('loginCtrl', function($scope, $firebase){
 
     $scope.githubLogin = function() {
         firebaseRoot.authWithOAuthRedirect('github', function() {
-            $scope.$apply(checkAuth);
+            $scope.$apply(loginIfAuthenticated);
         });
     }
-
     $scope.firebaseLogout = function() {
         $scope.firebaseRef.unauth();
+        delete $scope.firebaseRef;
         $scope.showPage = 'login';
     }
 

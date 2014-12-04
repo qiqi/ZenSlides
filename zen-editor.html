@@ -55,7 +55,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <div ng-range-slider ng-from="currentSlide.hSliderOutL" ng-to="currentSlide.hSliderOutR"class='h-slider' style="width:100%;" min="-50" max="150" id="h-slider-out"></div>
         <div ng-range-slider ng-from="currentSlide.hSliderInL" ng-to="currentSlide.hSliderInR" class='h-slider' style="width:100%;" min="0" max="100" id="h-slider-in"></div>
       </div>
-      <input id="url" class='h-slider' type="text" placeholder="url" ng-model="currentSlide.url" style="width:60%" />
+      <input id="url" class='h-slider' type="url" placeholder="url" ng-model="currentSlide.url" style="width:60%" required/>
     </div>
     <div id='zoom' class='float' data-role="controlgroup" style="display:inline-block; margin:20px" ng-show='isMouseOverMain'>
       <a ng-click="zoomIn();" class="ui-btn ui-btn-icon-notext ui-icon-plus">Zoom In</a>

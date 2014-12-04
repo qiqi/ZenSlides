@@ -77,9 +77,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </div>
     <div data-role="content">
     <div class="search-container">
-      <input id="search" type="search" data-theme="c" placeholder="Search your presentations">
+      <input id="search" type="text" data-theme="c" data-clear-btn="true" ng-model="searchText" placeholder="Search your presentations">
     </div>
-    <div class="pres-container" ng-repeat="(presId, pres) in presentations" ng-mouseover="slideSelected=true" ng-mouseleave="slideSelected=false">
+    <div class="pres-container" ng-repeat="(presId, pres) in presentations | notesContains: searchText" ng-mouseover="slideSelected=true" ng-mouseleave="slideSelected=false">
       <a href="#delete{{presId}}" data-role="button" data-theme="a" ng-show="slideSelected" ng-click="deletePres(presId)" class="delete-slide-btn ui-btn ui-icon-delete ui-btn-icon-notext"></a>
       <div class="pres" ng-class="{selected: slideSelected}" ng-click="openPres(presId)">
         <div class="slide" ng-repeat="slide in pres.slides | limitTo: 3">

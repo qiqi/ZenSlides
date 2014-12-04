@@ -14,6 +14,14 @@
 //. You should have received a copy of the GNU Affero General Public License
 //. along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+function GUID() {
+    function S4() {
+        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    }
+    return (S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-"
+          + S4() + "-" + S4() + S4() + S4()).toLowerCase();
+}
+
 Firebase.INTERNAL.forceWebSockets();
 firebaseRoot = new Firebase("https://zenboard.firebaseio.com/private");
 
@@ -199,9 +207,11 @@ directive('zenEditor', function() {
                     if (mathjaxTimeout) {
                         clearTimeout(mathjaxTimeout);
                     }
-                    mathjaxTimeout = setTimeout( function() {
-                        MathJax.Hub.Queue(["Typeset", MathJax.Hub, preview]);
-                    }, 1000);
+                    [50, 200, 1000].forEach( function(dt) {
+                        setTimeout(function() {
+                            MathJax.Hub.Queue(["Typeset",MathJax.Hub, preview]);
+                        }, dt);
+                    } );
                 }
             });
 
@@ -297,6 +307,7 @@ directive('ngRangeSlider', function() {
 }).
 controller('loginCtrl', function($scope, $firebase){
     $scope.showPage = 'login';
+    $scope.searchText = '';
     $scope.presentation = {};
     loginIfAuthenticated();
     var authInterval = setInterval(loginIfAuthenticated, 1000);
@@ -345,13 +356,40 @@ controller('loginCtrl', function($scope, $firebase){
         if ($scope.presentations) {
             var id = GUID();
             while (id in $scope.presentations) id = GUID();
+            $scope.presentations[id] = {};
             $scope.openPres(id);
         }
     }
     $scope.deletePres = function(id) {
         if ($scope.presentations) {
             delete $scope.presentations[id];
-            $scope.$apply();
         }
     }
+}).
+filter('notesContains', function(){
+    function slideContains(slides, text) {
+        if (slides) {
+            for (var id in slides) {
+                if (slides[id].notes && slides[id].notes.indexOf && slides[id].notes.indexOf(text) >= 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    return function(presentations, text) {
+        if (text) {
+            var filteredPresentations = {};
+            for (var id in presentations) {
+                if (presentations[id]) {
+                    if (slideContains(presentations[id].slides, text)) {
+                        filteredPresentations[id] = presentations[id];
+                    }
+                }
+            }
+            return filteredPresentations;
+        } else {
+            return presentations;
+        }
+    };
 });

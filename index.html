@@ -50,19 +50,52 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <div class="landing-header">ZenBoard</div>
     <div class="landing-subheader">Slides</div>
     <div class="button-wrapper">
-      <a class='login-button' data-role="button" data-theme="a">Experience the Anti-Powerpoint</a>
+      <div class="ui-grid-a">
+          <div class="ui-block-a"><button data-theme="b" ng-click="showPage='loginForm'">Log in</button></div>
+          <div class="ui-block-b"><button data-theme="a" ng-click="showPage='signupForm'">Learn more &amp; Sign up</button></div>
+      </div>
     </div>
-    <div class="button-wrapper"> </div>
     <div class="button-wrapper">
-      <a class='login-button' data-role="button" data-theme="a" ng-click="githubLogin();">Log in via Github</a>
-      <a class='login-button' data-role="button" data-theme="a" ng-click="firebaseLogin();">Log in via Google</a>
-      <a class='login-button' data-role="button" data-theme="a" ng-click="firebaseLogin();">Log in via Twitter</a>
     </div>
     <div class="landing-footer">
         <a href="https://github.com/qiqi/ZenSlides" style="color:black">
             https://github.com/qiqi/ZenSlides
         </a>
     </div>
+  </div>
+
+  <div ng-show="showPage=='loginForm'">
+    <div class="landing-header">ZenBoard</div>
+    <div class="landing-subheader">Log into Slides</div>
+    <form class="button-wrapper" name="loginForm" ng-submit="firebaseLogin()">
+      <div data-role="footer" ng-show="loginForm.message"><font color='#800'>{{loginForm.message}}</font></div>
+      <input type="email" ng-model="loginForm.email" placeholder="email" ng-required="loginForm.Email"/>
+      <input type="password" ng-model="loginForm.password" placeholder="password"/>
+      <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;" ng-disabled="!isLoginValid()"/>
+      <div class="ui-grid-a">
+          <div class="ui-block-a"><button data-theme="b" ng-click="firebaseLogin()" ng-disabled="!isLoginValid()">Login</button> </div>
+          <div class="ui-block-b"><button data-theme="a" ng-click="loginForm.message=null; showPage='login'">Cancel</button> </div>
+      </div>
+    </form>
+  </div>
+
+  <div ng-show="showPage=='signupForm'">
+    <div class="landing-header">ZenBoard</div>
+    <div class="button-wrapper">
+        ZenBoard has all the benefits of a whiteboard, plus images, videos and interactive polls.
+    </div>
+    <div class="landing-subheader">Sign up here</div>
+    <form class="button-wrapper" name="signupForm" ng-submit="firebaseSignup()">
+      <div data-role="footer" ng-show="signupForm.message"><font color='#800'>{{signupForm.message}}</font></div>
+      <input type="email" ng-model="signupForm.email" placeholder="your email" ng-required="signupForm.email"/>
+      <input type="password" ng-model="signupForm.password" placeholder="your password"/>
+      <input type="password" ng-model="signupForm.password2" placeholder="retype your password"/>
+      <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;" ng-disabled="!isSignupValid()" ng-click="firebaseSignup()"/>
+      <div class="ui-grid-a">
+          <div class="ui-block-a"><button data-theme="b" ng-click="firebaseSignup()" ng-disabled="!isSignupValid()">Sign up</button></div>
+          <div class="ui-block-b"><button data-theme="a" ng-click="signupForm.message=null; showPage='login'">Cancel</button></div>
+      </div>
+    </form>
   </div>
 
   <div ng-show="showPage=='chooser'">

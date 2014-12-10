@@ -23,7 +23,7 @@ function GUID() {
 }
 
 Firebase.INTERNAL.forceWebSockets();
-firebaseRoot = new Firebase("https://zenboard.firebaseio.com/private");
+firebaseRoot = new Firebase("https://zenboard.firebaseio.com/");
 
 angular.module('zenBoard', ['firebase', 'yaru22.md']).
 directive('zenEditor', function() {
@@ -217,9 +217,6 @@ directive('zenEditor', function() {
 
             var webview = $('#webview');
             scope.$watch('currentSlide.url', function (url) {
-                if (url && url.indexOf('http://') != 0 && url.indexOf('https://') != 0){
-                    url = 'http://' + url;
-                }
                 try {
                     webview.attr('src', url);
                 } catch (err) {
@@ -227,8 +224,10 @@ directive('zenEditor', function() {
                 }
             });
 
+            var uiBlockA = element.find('.ui-block-a');
+            var uiBlockB = element.find('.ui-block-b');
             function zoomThumbnails () {
-                var width = ($('.ui-block-a').width() - 80);
+                var width = uiBlockA.width() - 80;
                 $('#thumbnail-style').html('.thumbnail{'
                   + 'width:' + width + 'px;'
                   + 'height:' + width * 3/4 + 'px;}');
@@ -237,9 +236,9 @@ directive('zenEditor', function() {
             $(window).resize(zoomThumbnails);
 
             function zoomMain () {
-              var width = ($('.ui-block-b').width() - 100);
-              var height = ($(window).height() - 200);
-              var left = $('.ui-block-a').width() + 10;
+              var width = uiBlockB.width() - 100;
+              var height = $(window).height() - 200;
+              var left = uiBlockA.width() + 10;
               var zoom = Math.min((width - 80) / 1600, height / 1200) * 0.9;
               $('#control-style').html(
                   '#main{-ms-zoom:' + zoom + ';' + '-moz-transform:scale(' + zoom + ');'
@@ -307,35 +306,73 @@ directive('ngRangeSlider', function() {
 }).
 controller('loginCtrl', function($scope, $firebase){
     $scope.showPage = 'login';
-    $scope.searchText = '';
-    $scope.presentation = {};
+    $scope.isLoggedIn = function() {
+        return $scope.showPage == 'chooser' || $scope.showPage == 'editor';
+    }
+
     loginIfAuthenticated();
     var authInterval = setInterval(loginIfAuthenticated, 1000);
     function loginIfAuthenticated() {
         var auth = firebaseRoot.getAuth();
+        console.log('auth:', auth);
         if (auth) {
             if (authInterval) {
                 clearInterval(authInterval);
             }
-            var ref = firebaseRoot.child(auth.uid).child('presentations');
+            var ref = firebaseRoot.child('private').child(auth.uid).child('presentations');
             $scope.firebaseRef = ref;
             $firebase(ref).$asObject().$bindTo($scope, 'presentations');
-            if ($scope.showPage == 'login') {
+            if (!$scope.isLoggedIn()) {
                 $scope.showPage = 'chooser';
             }
         }
     }
 
-    $scope.githubLogin = function() {
-        firebaseRoot.authWithOAuthRedirect('github', function() {
-            $scope.$apply(loginIfAuthenticated);
+    $scope.isSignupValid = function() {
+        return $scope.signupForm.email && $scope.signupForm.password
+            && $scope.signupForm.password == $scope.signupForm.password2
+            && $scope.signupForm.password.length >= 6
+            && $scope.signupForm.$valid;
+    };
+    $scope.firebaseSignup = function() {
+        firebaseRoot.createUser({
+            email: $scope.signupForm.email,
+            password: $scope.signupForm.password
+        }, function(error) {
+            if (error === null) {
+                $scope.loginForm.message = 'New user created; you can log in now.';
+                $scope.showPage = 'loginForm';
+            } else {
+                $scope.signupForm.message = error.message;
+                $scope.$apply();
+            }
         });
-    }
+    };
+    $scope.isLoginValid = function() {
+        return $scope.loginForm.email && $scope.loginForm.password
+            && $scope.loginForm.$valid;
+    };
+    $scope.firebaseLogin = function() {
+        firebaseRoot.authWithPassword({
+            email: $scope.loginForm.email,
+            password: $scope.loginForm.password
+        }, function(error, authData) {
+            if (error === null) {
+                loginIfAuthenticated();
+            } else {
+                $scope.loginForm.message = error.message;
+                $scope.$apply();
+            }
+        });
+    };
     $scope.firebaseLogout = function() {
         $scope.firebaseRef.unauth();
         delete $scope.firebaseRef;
         $scope.showPage = 'login';
     }
+
+    $scope.searchText = '';
+    $scope.presentation = {};
 
     $scope.$watch('showPage', function() {
         [100, 500, 2000, 10000, 300000].forEach( function(dt) {

@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       </div>
     </div>
   </div>
-  <div class="ui-block-b" style="height:100vh; width:61%;" ng-mouseover="isMouseOverMain=true" ng-mouseleave="isMouseOverMain=false">
+  <div class="ui-block-b" style="height:100vh; width:61%;" ng-mouseenter="isMouseOverMain=true" ng-mouseleave="isMouseOverMain=false">
     <div class="float" id="main-outer" ng-class="{selected: isMouseOverMain}">
       <div id="main" ng-class="{selected: isMouseOverMain}">
         <div id="webview-box">
@@ -62,7 +62,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <a ng-click="zoomOut();" class="ui-btn ui-btn-icon-notext ui-icon-minus">Zoom Out</a>
     </div>
   </div>
-  <div class="ui-block-c" style="height:100vh; width:24%;">
-    <textarea id="slide-notes" ng-model="currentSlide.notes" placeholder="Notes in markdown" ng-mouseover="isMouseOverNotes=true" ng-mouseleave="isMouseOverNotes=false"></textarea>
+  <div class="ui-block-c" style="height:100vh; width:24%; position:relative;">
+    <textarea class="slide-notes"></textarea>
+    <md ng-model="currentSlide.notes" style="position:absolute; left:0; top:0; z-order:1000000"></md>
   </div>
 </div>

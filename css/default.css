@@ -14,7 +14,7 @@
     margin: 50px;
 }
 .button-wrapper {
-    padding: 5px;
+    padding: 10px;
     padding-left: 50px;
     padding-right: 50px;
 }
@@ -177,7 +177,7 @@ iframe {
     width: 100%;
     text-align: right;
 }
-textarea#slide-notes, textarea#html-notes {
+textarea.slide-notes, textarea#html-notes {
     position: relative;
     height: 96% !important;
     margin-top: 5% !important;
